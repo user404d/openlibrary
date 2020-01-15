@@ -19,7 +19,7 @@ except NameError:  # Python 3
     from io import IOBase as file
 
 
-class AppURLopener(urllib.FancyURLopener):
+class AppURLopener(urllib.request.FancyURLopener):
     version = "Mozilla/5.0 (Compatible; coverstore downloader http://covers.openlibrary.org)"
 
 socket.setdefaulttimeout(10.0)
