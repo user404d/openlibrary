@@ -4,9 +4,11 @@ Reader and writer for WARC file format version 0.10.
 http://archive-access.sourceforge.net/warc/warc_file_format-0.10.html
 """
 
-import urllib
 import httplib
 import datetime
+
+from six.moves import urllib
+
 
 WARC_VERSION = "0.10"
 CRLF = "\r\n"

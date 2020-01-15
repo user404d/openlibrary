@@ -1,4 +1,3 @@
-import urllib
 import requests
 import logging
 import web
@@ -15,6 +14,9 @@ from openlibrary.core.civicrm import (
     get_contact_id_by_username,
     get_sponsorships_by_contact_id)
 from openlibrary.utils.isbn import to_isbn_13
+
+from six.moves import urllib
+
 
 try:
     from booklending_utils.sponsorship import eligibility_check
@@ -80,7 +82,7 @@ def do_we_want_it(isbn, work_id):
         'include_promises': 'true',  # include promises and sponsored books
         'search_id': isbn
     }
-    url = '%s/book/marc/ol_dedupe.php?%s' % (lending.config_ia_domain,  urllib.urlencode(params))
+    url = '%s/book/marc/ol_dedupe.php?%s' % (lending.config_ia_domain,  urllib.parse.urlencode(params))
     r = requests.get(url)
     try:
         data = r.json()
@@ -168,7 +170,7 @@ def qualifies_for_sponsorship(edition):
     })
     resp.update({
         'edition': edition_data,
-        'sponsor_url': lending.config_ia_domain + '/donate?' + urllib.urlencode({
+        'sponsor_url': lending.config_ia_domain + '/donate?' + urllib.parse.urlencode({
             'campaign': 'pilot',
             'type': 'sponsorship',
             'context': 'ol',

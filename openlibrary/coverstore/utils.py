@@ -1,7 +1,5 @@
 """Utilities for coverstore"""
 
-import urllib
-import urllib2
 import socket
 import os
 import mimetypes
@@ -9,6 +7,7 @@ import simplejson
 import web
 
 import random
+from six.moves import urllib
 import string
 
 import config
@@ -54,7 +53,7 @@ def ol_things(key, value):
         }
         try:
             d = dict(query=simplejson.dumps(query))
-            result = download(get_ol_url() + '/api/things?' + urllib.urlencode(d))
+            result = download(get_ol_url() + '/api/things?' + urllib.parse.urlencode(d))
             result = simplejson.loads(result)
             return result['result']
         except IOError:
@@ -74,8 +73,8 @@ def ol_get(olkey):
 
 USER_AGENT = "Mozilla/5.0 (Compatible; coverstore downloader http://covers.openlibrary.org)"
 def download(url):
-    req = urllib2.Request(url, headers={'User-Agent': USER_AGENT})
-    r = urllib2.urlopen(req)
+    req = urllib.request.Request(url, headers={'User-Agent': USER_AGENT})
+    r = urllib.request.urlopen(req)
     return r.read()
 
 def urldecode(url):
@@ -88,7 +87,7 @@ def urldecode(url):
     base, query = urllib.splitquery(url)
     query = query or ""
     items = [item.split('=', 1) for item in query.split('&') if '=' in item]
-    d = dict((urllib.unquote(k), urllib.unquote_plus(v)) for (k, v) in items)
+    d = dict((urllib.parse.unquote(k), urllib.unquote_plus(v)) for (k, v) in items)
     return base, d
 
 def changequery(url, **kw):
@@ -98,7 +97,7 @@ def changequery(url, **kw):
     """
     base, params = urldecode(url)
     params.update(kw)
-    return base + '?' + urllib.urlencode(params)
+    return base + '?' + urllib.parse.urlencode(params)
 
 def read_file(path, offset, size, chunk=50*1024):
     """Returns an iterator over file data at specified offset and size.
@@ -141,7 +140,7 @@ def urlencode(data):
             break
 
     if not multipart:
-        return 'application/x-www-form-urlencoded', urllib.urlencode(data)
+        return 'application/x-www-form-urlencoded', urllib.parse.urlencode(data)
     else:
         # adopted from http://code.activestate.com/recipes/146306/
         def get_content_type(filename):
