@@ -3,10 +3,7 @@ import re
 
 import pytest
 import web
-try:
-    from web.browser import AppBrowser
-except ImportError:
-    from web import AppBrowser
+from web.browser import AppBrowser
 
 from infogami import config
 from infogami.infobase import client
