@@ -3,7 +3,6 @@ import simplejson
 import babel
 import babel.core
 import babel.dates
-from UserDict import DictMixin
 from collections import defaultdict
 import re
 import random
@@ -16,6 +15,7 @@ from HTMLParser import HTMLParser
 
 import six
 from six.moves import urllib
+from six.moves.collections_abc import Mapping
 
 from infogami import config
 from infogami.utils import view, delegate, stats
@@ -28,7 +28,7 @@ from openlibrary.core.helpers import commify, parse_datetime
 from openlibrary.core.middleware import GZipMiddleware
 from openlibrary.core import cache, ab
 
-class MultiDict(DictMixin):
+class MultiDict(Mapping):
     """Ordered Dictionary that can store multiple values.
 
         >>> d = MultiDict()
@@ -189,7 +189,7 @@ def fuzzy_find(value, options, stopwords=[]):
     if not options:
         return value
 
-    rx = web.re_compile("[-_\.&, ]+")
+    rx = web.re_compile(r"[-_\.&, ]+")
 
     # build word frequency
     d = defaultdict(list)
@@ -448,7 +448,7 @@ def parse_toc_row(line):
         >>> f("1.1 | Apple")
         (0, '1.1', 'Apple', '')
     """
-    RE_LEVEL = web.re_compile("(\**)(.*)")
+    RE_LEVEL = web.re_compile(r"(\**)(.*)")
     level, text = RE_LEVEL.match(line.strip()).groups()
 
     if "|" in text:
@@ -576,7 +576,7 @@ def _get_recent_changes():
             return False
 
     # ignore reverts
-    re_revert = web.re_compile("reverted to revision \d+")
+    re_revert = web.re_compile(r"reverted to revision \d+")
     def is_revert(r):
         return re_revert.match(r.comment or "")
 

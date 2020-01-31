@@ -3,11 +3,16 @@ import re
 
 import pytest
 import web
-from web.browser import AppBrowser
 
 from infogami import config
 from infogami.infobase import client
 from infogami.utils import delegate
+
+try:  # newer versions of web.py
+    from web.browser import AppBrowser
+except ImportError:  # older versions of web.py
+    from web import AppBrowser
+
 from openlibrary.mocks.mock_infobase import mock_site, MockConnection
 from openlibrary.plugins import ol_infobase
 
